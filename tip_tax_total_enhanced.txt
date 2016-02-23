@@ -1,0 +1,133 @@
+Lab 4.6 – Programming Challenge 1 – Tip, Tax, and Total
+-------------------------------------------------------
+Part 1) Write a program that will calculate a XXX% tip and a 6% tax on a meal
+        price.  The user will enter the meal price and the program will
+        calculate tip, tax, and the total.  The total is the meal price plus
+        the tip plus the tax.  Your program will then display the values of
+        tip, tax, and total.
+
+Part 2) The restaurant now wants to change the program so that the tip
+        percent is based on the meal price.  The new amounts are as follows:
+        [Meal Price Range]          [Tip Percent]
+         ----------------            -----------
+         .01 to 5.99                 10%
+         6 to 12.00                  13%
+         12.01 to 17.00              16%
+         17.01 to 25.00              19%
+         25.01 and more              22%
+
+
+Pseudocode
+----------
+Declare Global Real saleTax = .06
+// baseTips is a Dictionary with the starting price of each range as the key
+//   and the tip percent in decimal form (Floats) as the value.
+Declare Global Dict baseTips = {.01: 0.1, 6: 0.13, 12.01: 0.16, 17.01: 0.19,
+                       25.01: .22}
+
+
+Module main()
+    // Local variables
+    Declare Real mealPrice  // User input value.
+    Declare Real mealTax
+    Declare Real mealTip
+    Declare Real mealTotal
+
+    // List used for user prompt and input validation.
+    //    The first value is the expected input and second is the prompt.
+    Declare List requestList = [['float', 'price of the meal']]
+
+    // Display intro to user.
+    Call fluffy_intro()
+
+    // Assigns user entered meal price after validating entered value.
+    Set mealPrice = get_valid_inputs(requestList)
+
+    // Assigns meal Tax, Tip and Total to their respective variables
+    mealTax, mealTip, mealTotal = calc_meal(mealPrice, baseTips)
+
+    // Display the costs of the meal to the user.
+    display_results(mealPrice, mealTax, mealTip, mealTotal)
+End Module
+
+
+// Displays an introduction to the program and describes what it does.
+Module fluffy_intro()
+    Display 'Welcome to the Tip, Tax, Total Enhanced program.'
+    Display 'This program requests the price of a meal and then calculates'
+    Display 'the meal tip, meal tax, and total cost of the meal.'
+    Display 'It then displays the results.'
+End Module
+
+
+// get_valid_inputs requests input from the user then tests the input.
+//   If invalid, it will alert the user and request the correct input.
+// The parameter is a nested List of ordered pair Lists.
+//   First value is the validation test and second is the user prompt.
+Function get_valid_inputs(List requestsList)
+
+    // local List to hold user inputs for return to calling module
+    Declare List userInputs
+
+    // Loop through each entry in requestList assigning each List pair
+    //  to request.
+    For request In requestsList Do
+        // Temporary holding variable for testing user input validity
+        Declare untestedInput
+
+        // First user prompt before testing loop
+        Set untestedInput = prompt_user_for_input(request[1])
+
+        // If test_value returns True, Not converts it to False and the While
+        //  Loop will not execute.
+        // If test_value returns False, the While executes and the user is
+        //  prompted to enter a valid value.
+        While (Not test_value(request[0], untestedInput))
+            Display untestedInput 'is not a valid value.'
+            Set untestedInput = (prompt_user_for_input(request[1]))
+        End While
+
+        // The user input tested valid and is appended to the userInputs List.
+        Append untestedInput To userInputs
+    End For
+
+    Return userInputs
+End Function
+
+
+// prompt_user_for_item accepts a string as an argument and returns the input
+// to the calling module.
+Function prompt_user_for_item(String promptTerm)
+    Display 'Please enter the,', promptTerm, '.'
+    // The user input is returned in an anonymous variable
+    Return Input
+End Function
+
+
+// test_value uses the testCondition to select the proper test.
+// It returns True or False to the calling Module.
+Function test_value(testCondition, testItem)
+    // The If-Then-Else structure functions as a Switch for test selection.
+    If testCondition == 'float' Then
+        # Try will try to convert testItem to a float. If it succeeds
+        #  True is returned to the calling module.  If float(testItem)
+        #  creates an error, except will stop the error from writing to
+        #  the screen and returns False.
+        Try
+            float(testItem)
+            Return True
+        Except
+            Return False
+    End If
+End Function
+
+
+// display_results is passed values used in print statements to display
+//  the results of the program to the user.
+Module display_results(mealPrice, mealTax, mealTip, mealTotal)
+    // This shows the meal cost breakdown and total.
+    Display 'The meal price is $', mealPrice
+    Display 'The tip is $', mealTip
+    Display 'The tax is $', mealTax
+    Display 'The total cost is $', mealTotal
+End Module
