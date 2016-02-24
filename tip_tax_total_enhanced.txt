@@ -47,7 +47,7 @@ Module main()
     mealTax, mealTip, mealTotal = calc_meal(mealPrice)
 
     // Display the costs of the meal to the user.
-    display_results(mealPrice, mealTax, mealTip, mealTotal)
+    Call display_results(mealPrice, mealTax, mealTip, mealTotal)
 End Module
 
 
