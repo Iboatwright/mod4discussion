@@ -19,10 +19,10 @@ Part 2) The restaurant now wants to change the program so that the tip
 
 Pseudocode
 ----------
-Declare Global Real saleTax = .06
+Declare Global Real SALES_TAX = .06
 // baseTips is a Dictionary with the starting price of each range as the key
 //   and the tip percent in decimal form (Floats) as the value.
-Declare Global Dict baseTips = {.01: 0.1, 6: 0.13, 12.01: 0.16, 17.01: 0.19,
+Declare Global Dict BASE_TIPS = {.01: 0.1, 6: 0.13, 12.01: 0.16, 17.01: 0.19,
                        25.01: .22}
 
 
@@ -44,7 +44,7 @@ Module main()
     Set mealPrice = get_valid_inputs(requestList)
 
     // Assigns meal Tax, Tip and Total to their respective variables
-    mealTax, mealTip, mealTotal = calc_meal(mealPrice, baseTips)
+    mealTax, mealTip, mealTotal = calc_meal(mealPrice)
 
     // Display the costs of the meal to the user.
     display_results(mealPrice, mealTax, mealTip, mealTotal)
@@ -119,6 +119,35 @@ Function test_value(testCondition, testItem)
         Except
             Return False
     End If
+End Function
+
+
+// calc_meal is passed the validated user input meal price and returns the
+//   meal tax, meal tip, and meal total to the calling Module.
+Function calc_meal(mPrice)
+    mTax = mPrice * SALES_TAX
+    mTip = mPrice * calc_tip(mPrice)
+    Return mTax, mTip, (mTax + mTip)
+End Function
+
+
+// calc_tip is passed the meal price and returns the tip multiplier in
+//   in decimal form to the calling function.
+Function calc_tip(mPrice)
+    // This creates a List of the keys from the BASE_TIPS global dict and
+    // sorts them in order from lowest to highest (0.01 to 25.01).
+    Declare List tipRanges = sort(BASE_TIPS.keys())
+
+    // The for loop uses reverse() to start at the end of the keys list
+    //   and assigns the current key to the variable range.
+    For range In reverse(tipRanges) Do
+
+        // If the meal price is greater than or equal to the current
+        //   BASE_TIP key then return the value associated with that key.
+        If mPrice >= range Then
+            Return BASE_TIPS[range]
+        End If
+    End For
 End Function
 
 
