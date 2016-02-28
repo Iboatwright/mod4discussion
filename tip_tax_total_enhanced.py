@@ -134,6 +134,8 @@ def calc_tip(mPrice):
         #   BASE_TIP key then return the value associated with that key.
         if mPrice >= range:
             return BASE_TIPS[range]
+    # Should never get to this statement.
+    return None
 
 
 # display_results is passed values used in print statements to display
